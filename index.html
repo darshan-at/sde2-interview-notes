@@ -4,123 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f7f1df" />
-  <meta name="description" content="SDE2 interview handwritten notes — system design, distributed systems, networking and caching." />
+  <meta name="description" content="SDE2 interview handwritten notes — system design, databases, networking and caching." />
   <title>SDE2 Interview Notes</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <span class="brand-mark">✎</span>
-      <div>
-        <h1>SDE2 Interview Notes</h1>
-        <p>Handwritten revision notes · System Design · Distributed Systems</p>
-      </div>
-    </div>
-    <a class="github-link" href="https://github.com/darshan-at/sde2-interview-notes" target="_blank" rel="noreferrer">GitHub ↗</a>
-  </header>
+<header class="site-header"><div class="brand"><span class="brand-mark">✎</span><div><h1>SDE2 Interview Notes</h1><p>Handwritten revision notebook · System Design · Distributed Systems</p></div></div><a class="github-link" href="https://github.com/darshan-at/sde2-interview-notes" target="_blank" rel="noreferrer">GitHub ↗</a></header>
+<main>
+<section class="hero"><div><span class="eyebrow">INTERVIEW REVISION NOTEBOOK</span><h2>Learn it. Sketch it. Explain it.</h2><p>Visual SDE2 revision notes in the original notebook style — blue pen, black headings, yellow highlights and hand-drawn architecture diagrams.</p></div><div class="hero-doodle" aria-hidden="true"><span>Client</span><b>→</b><span class="highlight">Cache</span><b>→</b><span>DB</span></div></section>
 
-  <main>
-    <section class="hero">
-      <div>
-        <span class="eyebrow">INTERVIEW REVISION NOTEBOOK</span>
-        <h2>Learn it. Sketch it. Explain it.</h2>
-        <p>Quick visual notes for SDE2 system-design interviews. Built around the original notebook-page style: blue pen, black headings, yellow highlights and hand-drawn architecture diagrams.</p>
-      </div>
-      <div class="hero-doodle" aria-hidden="true">
-        <span>Client</span><b>→</b><span class="highlight">Cache</span><b>→</b><span>DB</span>
-      </div>
-    </section>
-
-    <div class="toolbar">
-      <label class="search-box">
-        <span>⌕</span>
-        <input id="search" type="search" placeholder="Search notes…" autocomplete="off" />
-      </label>
-      <div class="filters" id="filters" aria-label="Filter topics">
-        <button class="filter active" data-filter="all">All</button>
-        <button class="filter" data-filter="caching">Caching</button>
-        <button class="filter" data-filter="clustering">Clustering</button>
-        <button class="filter" data-filter="networking">Networking</button>
-      </div>
-    </div>
-
-    <section id="notes" class="notes-grid" aria-live="polite">
-      <article class="note-card" data-category="caching" data-search="cache caching cache strategies cache aside write through write back read through refresh ahead eviction">
-        <div class="note-image-wrap">
-          <img src="assets/notes/cache-strategies.png" alt="Handwritten Cache Strategies notes" loading="lazy" />
-          <div class="image-fallback">
-            <span class="fallback-title">CACHE STRATEGIES</span>
-            <span>Cache-Aside · Write-Through · Write-Back · Read-Through · Refresh-Ahead</span>
-          </div>
-        </div>
-        <div class="note-body">
-          <div class="note-meta"><span class="tag yellow">Caching</span><span>Interview core</span></div>
-          <h3>Cache Strategies</h3>
-          <p>Cache basics, key terms, read/write strategies, pros & cons, and a quick comparison.</p>
-          <button class="open-note" data-src="assets/notes/cache-strategies.png" data-title="Cache Strategies">Open full page</button>
-        </div>
-      </article>
-
-      <article class="note-card" data-category="clustering" data-search="active passive active active clustering failover split brain state consistency load balancer">
-        <div class="note-image-wrap">
-          <img src="assets/notes/active-clustering.png" alt="Handwritten Active-Passive versus Active-Active Clustering notes" loading="lazy" />
-          <div class="image-fallback">
-            <span class="fallback-title">ACTIVE-PASSIVE vs ACTIVE-ACTIVE</span>
-            <span>Failover · State consistency · Split brain · Quick comparison</span>
-          </div>
-        </div>
-        <div class="note-body">
-          <div class="note-meta"><span class="tag yellow">Clustering</span><span>High yield</span></div>
-          <h3>Active-Passive vs Active-Active</h3>
-          <p>Failure detection, failover, state consistency, utilization, complexity and split-brain risk.</p>
-          <button class="open-note" data-src="assets/notes/active-clustering.png" data-title="Active-Passive vs Active-Active Clustering">Open full page</button>
-        </div>
-      </article>
-
-      <article class="note-card" data-category="networking" data-search="proxy reverse proxy load balancer firewall vpn networking ssl health check encrypted tunnel">
-        <div class="note-image-wrap">
-          <img src="assets/notes/networking-proxy-firewall-vpn.png" alt="Handwritten Proxy Reverse Proxy Load Balancer Firewall VPN notes" loading="lazy" />
-          <div class="image-fallback">
-            <span class="fallback-title">PROXY · REVERSE PROXY · LB</span>
-            <span>Firewall · VPN · SSL termination · Health checks · Routing</span>
-          </div>
-        </div>
-        <div class="note-body">
-          <div class="note-meta"><span class="tag yellow">Networking</span><span>System design</span></div>
-          <h3>Proxy, Load Balancer, Firewall & VPN</h3>
-          <p>A visual distinction between forward/reverse proxies, load balancers, firewalls and VPNs.</p>
-          <button class="open-note" data-src="assets/notes/networking-proxy-firewall-vpn.png" data-title="Proxy, Reverse Proxy, Load Balancer, VPN, Firewall">Open full page</button>
-        </div>
-      </article>
-    </section>
-
-    <section class="coming-soon">
-      <span class="scribble">✦</span>
-      <div>
-        <h3>More pages coming</h3>
-        <p>Database design, messaging, consistency, sharding, APIs, reliability and complete system-design walkthroughs can slot into the same notebook.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <span>Made for SDE2 interview revision</span>
-    <span>Keep the diagrams close. They make explanations easier.</span>
-  </footer>
-
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button class="modal-close" data-close aria-label="Close">×</button>
-      <h2 id="modal-title">Note</h2>
-      <div class="modal-image-wrap">
-        <img id="modal-image" alt="" />
-        <div class="modal-fallback">The note image will appear here once the source image is added under <code>assets/notes/</code>.</div>
-      </div>
-    </div>
+<section class="gallery-card">
+  <div class="gallery-heading"><div><span class="eyebrow">ORIGINAL HANDWRITTEN PAGES</span><h2>Current notes</h2></div><span class="page-count">04 pages</span></div>
+  <button class="gallery-open" data-src="assets/notes/notes-contact.jpg" data-title="SDE2 Handwritten Notes — Current Pages"><img src="assets/notes/notes-contact.jpg" alt="Four handwritten SDE2 interview note pages: clustering, SQL vs NoSQL, cache strategies, and networking" /><span>Open notebook gallery ↗</span></button>
+  <div class="topic-strip">
+    <span>01 · Active-Passive vs Active-Active Clustering</span>
+    <span>02 · SQL vs NoSQL</span>
+    <span>03 · Cache Strategies</span>
+    <span>04 · Proxy · Reverse Proxy · Load Balancer · VPN · Firewall</span>
   </div>
+</section>
 
-  <script src="app.js"></script>
-</body>
-</html>
+<section class="quick-grid">
+  <article><span class="tag yellow">Caching</span><h3>Cache Strategies</h3><p>Cache-aside, write-through, write-back, read-through and refresh-ahead.</p></article>
+  <article><span class="tag yellow">Databases</span><h3>SQL vs NoSQL</h3><p>Data models, sharding, replication, transactions, scalability and use cases.</p></article>
+  <article><span class="tag yellow">Clustering</span><h3>Active vs Active</h3><p>Failover, state consistency, utilization, split brain and trade-offs.</p></article>
+  <article><span class="tag yellow">Networking</span><h3>Network Building Blocks</h3><p>Proxy, reverse proxy, load balancer, firewall and VPN — visually compared.</p></article>
+</section>
+
+<section class="coming-soon"><span class="scribble">✦</span><div><h3>More pages coming</h3><p>Messaging, consistency, sharding, APIs, reliability and complete system-design walkthroughs can slot into the same notebook.</p></div></section>
+</main>
+<footer><span>Made for SDE2 interview revision</span><span>Keep the diagrams close. They make explanations easier.</span></footer>
+<div class="modal" id="modal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" data-close aria-label="Close">×</button><h2 id="modal-title">Note</h2><div class="modal-image-wrap"><img id="modal-image" alt="" /><div class="modal-fallback">The note image could not be loaded.</div></div></div></div>
+<script>const m=document.querySelector('#modal'),i=document.querySelector('#modal-image'),t=document.querySelector('#modal-title');document.querySelectorAll('[data-src]').forEach(b=>b.addEventListener('click',()=>{m.classList.add('open');m.setAttribute('aria-hidden','false');i.src=b.dataset.src;i.alt=b.dataset.title;t.textContent=b.dataset.title;document.body.style.overflow='hidden'}));function close(){m.classList.remove('open');m.setAttribute('aria-hidden','true');i.removeAttribute('src');document.body.style.overflow=''}document.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',close));document.addEventListener('keydown',e=>e.key==='Escape'&&close());</script>
+</body></html>
