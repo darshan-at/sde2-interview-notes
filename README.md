@@ -1,24 +1,57 @@
 # SDE2 Interview Notes
 
-A lightweight static website for SDE2 interview preparation using handwritten notebook-style study pages.
+A lightweight, framework-free static website for SDE2 interview preparation. The notes focus on clear explanations, practical system-design mental models, HTML diagrams, and comparison tables.
 
 ## Current notes
 
 - **Cache Strategies** — Cache-Aside, Write-Through, Write-Back, Read-Through, Refresh-Ahead and comparisons.
+- **Database Indexing** — B+ Trees, data pages, data-page structure, page-to-disk-block mapping, clustered indexing, non-clustered indexing, and interview comparison points.
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
 - **Proxy / Reverse Proxy / Load Balancer / Firewall / VPN** — networking building blocks and system-design distinctions.
 
-## Images
+## Database Indexing
 
-The website expects the source notebook images at:
+The indexing notes are available as a dedicated static page:
 
 ```text
-assets/notes/cache-strategies.png
-assets/notes/active-clustering.png
-assets/notes/networking-proxy-firewall-vpn.png
+database-indexing.html
 ```
 
-The source images are the handwritten pages from the SDE2 notes project. The UI has graceful notebook-style fallbacks until those image binaries are added to the repository.
+The page explains the storage path conceptually:
+
+```text
+B+ Tree
+   ↓
+Leaf entry / row locator
+   ↓
+Data Page
+   ↓
+Buffer Pool / Memory
+   ↓
+Disk block when the page is not cached
+   ↓
+Actual rows
+```
+
+It also includes a typical data-page layout:
+
+```text
++-------------------+-------------------+----------------------+
+| Page Header       | Slot Directory    | Row / Record Data    |
+| - Page ID         | - Slot 1          | - Row 1              |
+| - Page Type       | - Slot 2          | - Row 2              |
+| - Record Count    | - ...             | - ...                |
+| - Free Space Ptr  | - Slot N          | - Row N              |
++-------------------+-------------------+----------------------+
+```
+
+### Storage terminology note
+
+A database page is a logical storage unit exposed by the database engine. The exact relationship between a database page and an underlying disk/storage block depends on the database and storage stack. Many systems use page sizes designed to align well with block I/O, but the mapping should not be assumed to be universally one-to-one.
+
+## Images
+
+The project intentionally uses **HTML diagrams, figures and tables** for the static site rather than depending on uploaded handwritten image binaries. This avoids broken-image problems on GitHub Pages while keeping the important visual explanations.
 
 ## Run locally
 
