@@ -60,4 +60,13 @@ modalImage.addEventListener('error', () => {
   modalImage.style.display = 'none';
 });
 
+// Keep the homepage navigation connected to the dedicated database-indexing page.
+const nav = document.querySelector('.nav nav');
+if (nav && !nav.querySelector('a[href="database-indexing.html"]')) {
+  const link = document.createElement('a');
+  link.href = 'database-indexing.html';
+  link.textContent = 'Indexing';
+  nav.appendChild(link);
+}
+
 applyFilters();
