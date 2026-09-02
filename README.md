@@ -10,6 +10,60 @@ A lightweight, framework-free static website for SDE2 interview preparation. The
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
 - **Proxy / Reverse Proxy / Load Balancer / Firewall / VPN** — networking building blocks and system-design distinctions.
 
+## Adding a new topic
+
+The site now uses a **single topic registry in `app.js`**. This prevents the homepage navigation and topic list from getting out of sync when new notes are added.
+
+### Standard workflow
+
+1. Create a new topic page, for example `distributed-transactions.html`.
+2. Add one object to `SDE_TOPICS` in `app.js`:
+
+```js
+{
+  id: 'distributed-transactions',
+  title: 'Distributed Transactions',
+  category: 'Databases',
+  description: '2PC, atomic commit, failures and practical interview trade-offs.',
+  href: 'distributed-transactions.html'
+}
+```
+
+3. Commit the page and `app.js` together.
+4. The homepage automatically gets a new topic card and navigation entry.
+
+For a topic that lives directly on `index.html`, use an anchor URL such as `index.html#transactions` instead of creating a separate page.
+
+### Important rules
+
+- Use **relative URLs** only so GitHub Pages works correctly under `/sde2-interview-notes/`.
+- Reuse `styles.css` for the common visual language.
+- Prefer dedicated topic pages for larger topics.
+- Keep diagrams as HTML/CSS where practical; do not make the site depend on uploaded image binaries.
+- Keep the main branch as the single publishing branch; no branch is required for each topic.
+
+## Site architecture
+
+```text
+index.html
+   │
+   ├── Existing topic sections
+   │
+   └── app.js
+         │
+         └── SDE_TOPICS registry
+                ├── homepage topic cards
+                └── shared navigation
+
+styles.css  → shared site styling
+
+Dedicated topic pages
+   ├── database-indexing.html
+   └── distributed-concurrency-control.html
+```
+
+This means a new topic has **one source of truth for its title, category, description and URL**. The homepage does not need a separate hand-edited navigation entry.
+
 ## Distributed Concurrency Control
 
 The concurrency notes are available as a dedicated static page:
