@@ -6,7 +6,7 @@ A lightweight, framework-free static website for SDE2 interview preparation. The
 
 - **Cache Strategies** — Cache-Aside, Write-Through, Write-Back, Read-Through, Refresh-Ahead and comparisons.
 - **Database Indexing** — B+ Trees, data pages, data-page structure, page-to-disk-block mapping, clustered indexing, non-clustered indexing, and interview comparison points.
-- **Distributed Concurrency Control** — why concurrency is needed, transactions and ACID, DB locking, isolation levels and anomalies, synchronization, pessimistic vs optimistic concurrency control, MVCC, deadlocks and version-based optimistic locking.
+- **Distributed Concurrency Control** — concurrency need, transactions/ACID, DB locking, isolation levels and anomalies, synchronization, optimistic vs pessimistic concurrency control, optimistic versioning, MVCC, deadlocks and distributed transactions.
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
 - **Proxy / Reverse Proxy / Load Balancer / Firewall / VPN** — networking building blocks and system-design distinctions.
 
@@ -18,32 +18,33 @@ The concurrency notes are available as a dedicated static page:
 distributed-concurrency-control.html
 ```
 
-Core mental model:
+The page covers the interview flow:
 
 ```text
-Many concurrent requests
-          ↓
-   Shared database state
-          ↓
-  Concurrency control
-     ↙           ↘
-Synchronize    Distributed CC
-                ↙       ↘
-        Pessimistic   Optimistic
-          (locks)    (version/check)
+Why concurrency?
+      ↓
+Transactions / ACID
+      ↓
+DB Locking
+      ↓
+Isolation Levels + anomalies
+      ↓
+Concurrency control
+  ┌───────────────┐
+  │ Synchronize   │
+  │ Optimistic    │
+  │ Pessimistic   │
+  └───────────────┘
+      ↓
+Distributed examples + MVCC + deadlocks
 ```
 
-The page covers:
+Important distributed-control ideas include:
 
-- Why concurrency is needed and the lost-update problem.
-- Transactions and ACID properties.
-- Shared and exclusive database locks.
-- Read Uncommitted, Read Committed, Repeatable Read and Serializable isolation levels.
-- Dirty reads, non-repeatable reads and phantom reads.
-- Synchronization versus distributed concurrency control.
-- Pessimistic concurrency control: lock first, then work.
-- Optimistic concurrency control: work first, validate, then commit or retry.
-- MVCC, deadlocks, distributed transactions and a version-column example.
+- **Pessimistic:** assume conflicts are likely; acquire locks and block conflicting operations.
+- **Optimistic:** assume conflicts are rare; use versions/timestamps/validation and retry when a conflict is detected.
+- **Isolation levels:** Read Uncommitted, Read Committed, Repeatable Read and Serializable, with dirty-read, non-repeatable-read and phantom-read behavior.
+- **Distributed optimistic locking:** version checks such as `UPDATE ... WHERE id=? AND version=?` prevent stale writers from silently overwriting newer data.
 
 ## Database Indexing
 
@@ -88,8 +89,6 @@ A database page is a logical storage unit exposed by the database engine. The ex
 ## Images
 
 The project intentionally uses **HTML diagrams, figures and tables** for the static site rather than depending on uploaded handwritten image binaries. This avoids broken-image problems on GitHub Pages while keeping the important visual explanations.
-
-The handwritten study image for Distributed Concurrency Control is maintained separately as a visual revision aid; the repository keeps the corresponding topic content in text/HTML so the static site remains reliable on GitHub Pages.
 
 ## Run locally
 
