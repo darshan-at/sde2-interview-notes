@@ -7,120 +7,22 @@
 <title>Database Indexing · SDE2 Interview Notes</title>
 <link rel="stylesheet" href="styles.css">
 <style>
-.topic-page{max-width:1120px;margin:auto;padding:48px 20px 72px}.topic-head{padding:20px 0 34px}.topic-head h1{font-size:clamp(32px,5vw,48px);line-height:1.12;margin:0 0 12px}.topic-head p{color:var(--muted);font-size:17px;max-width:780px}.topic-nav{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.topic-nav a{color:var(--blue);text-decoration:none;border:1px solid var(--border);background:#fff;border-radius:6px;padding:7px 11px;font-size:14px}.topic-section{margin:42px 0}.topic-section h2{font-size:26px;margin-bottom:8px}.topic-section>p{color:var(--muted)}.figure{background:#fff;border:1px solid var(--border);border-radius:8px;padding:22px;margin:20px 0;overflow:auto}.figure-title{font-weight:750;margin-bottom:16px}.tree{min-width:620px;text-align:center}.tree-row{display:flex;justify-content:center;gap:14px;margin:12px 0}.node{border:1px solid #9da7b1;border-radius:5px;background:#fff;padding:9px 14px;box-shadow:0 1px 0 rgba(0,0,0,.03)}.node.root{font-weight:750}.tree-arrow{text-align:center;color:var(--muted);font-size:20px}.leaf-row .node{min-width:120px}.linked{display:flex;justify-content:center;gap:0;color:var(--blue);font-size:13px;margin-top:-2px}.linked span{padding:0 22px}.page-diagram{display:grid;grid-template-columns:1fr 1fr 1.5fr;border:1px solid #9da7b1;min-width:700px}.page-part{padding:14px;border-right:1px dashed #b8c0c8;min-height:170px}.page-part:last-child{border-right:0}.page-part h4{margin:0 0 10px}.slot{border:1px solid #b8c0c8;border-radius:4px;padding:7px;margin:7px 0;background:#f8fafc}.row{border:1px solid #b8c0c8;border-radius:4px;padding:8px;margin:7px 0;background:#fff}.disk-map{display:flex;align-items:center;justify-content:center;gap:20px;min-width:720px}.index-box,.disk{border:1px solid #9da7b1;border-radius:7px;background:#fff;padding:15px}.index-box{min-width:220px}.disk{width:300px;border-radius:45%;padding:22px}.block{border:1px solid #aab4be;border-radius:5px;padding:9px;margin:7px 0;background:#f8fafc}.arrow-line{font-size:25px;color:var(--blue)}.flow-line{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:20px}.flow-line span{background:#fff;border:1px solid #b9c1c9;border-radius:5px;padding:9px 12px}.flow-line b{color:var(--blue)}.compare{overflow-x:auto}.callout strong{font-weight:800}.interview{background:#fffdf0;border-color:#eee0a1;border-left-color:#d1ae00}.back{margin-top:28px}.back a{color:var(--blue);text-decoration:none}.topic-section table{margin-top:16px}.note{font-size:13px;color:var(--muted)}@media(max-width:760px){.topic-page{padding-left:14px;padding-right:14px}.page-diagram,.disk-map,.tree{min-width:0}.page-diagram{grid-template-columns:1fr}.page-part{border-right:0;border-bottom:1px dashed #b8c0c8}.page-part:last-child{border-bottom:0}.disk-map{flex-direction:column}.disk{width:100%;border-radius:12px}.figure{padding:16px}}
+.tree{min-width:620px;text-align:center}.tree-row{display:flex;justify-content:center;gap:14px;margin:12px 0}.node{border:1px solid #9da7b1;border-radius:5px;background:#fff;padding:9px 14px;box-shadow:0 1px 0 rgba(0,0,0,.03)}.node.root{font-weight:750}.tree-arrow{text-align:center;color:var(--muted);font-size:20px}.leaf-row .node{min-width:120px}.linked{display:flex;justify-content:center;gap:0;color:var(--blue);font-size:13px;margin-top:-2px}.linked span{padding:0 22px}.page-diagram{display:grid;grid-template-columns:1fr 1fr 1.5fr;border:1px solid #9da7b1;min-width:700px}.page-part{padding:14px;border-right:1px dashed #b8c0c8;min-height:170px}.page-part:last-child{border-right:0}.page-part h4{margin:0 0 10px}.slot{border:1px solid #b8c0c8;border-radius:4px;padding:7px;margin:7px 0;background:#f8fafc}.row{border:1px solid #b8c0c8;border-radius:4px;padding:8px;margin:7px 0;background:#fff}.disk-map{display:flex;align-items:center;justify-content:center;gap:20px;min-width:720px}.index-box,.disk{border:1px solid #9da7b1;border-radius:7px;background:#fff;padding:15px}.index-box{min-width:220px}.disk{width:300px;border-radius:45%;padding:22px}.block{border:1px solid #aab4be;border-radius:5px;padding:9px;margin:7px 0;background:#f8fafc}.arrow-line{font-size:25px;color:var(--blue)}.flow-line{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:20px}.flow-line span{background:#fff;border:1px solid #b9c1c9;border-radius:5px;padding:9px 12px}.flow-line b{color:var(--blue)}.compare{overflow-x:auto}.note{font-size:13px;color:var(--muted)}@media(max-width:760px){.page-diagram,.disk-map,.tree{min-width:0}.page-diagram{grid-template-columns:1fr}.page-part{border-right:0;border-bottom:1px dashed #b8c0c8}.page-part:last-child{border-bottom:0}.disk-map{flex-direction:column}.disk{width:100%;border-radius:12px}.figure{padding:16px}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="container nav"><a class="brand" href="index.html">SDE2 Interview Notes</a><nav><a href="index.html">Home</a><a href="index.html#caching">Caching</a><a href="index.html#databases">Databases</a><a href="index.html#clustering">Clustering</a></nav></div></header>
+<header class="topbar"><div class="container nav"><a class="brand" href="index.html">SDE2 Interview Notes</a><nav></nav></div></header>
 <main class="topic-page">
-<section class="topic-head">
-<p class="kicker">DATABASES · INTERVIEW REVISION</p>
-<h1>Database Indexing</h1>
-<p>B+ Tree, data pages, disk-block mapping, clustered indexing and non-clustered indexing — with the storage-level picture that interviewers often expect.</p>
-<div class="topic-nav"><a href="#bplus">B+ Tree</a><a href="#page">Data Page</a><a href="#disk">Page → Disk</a><a href="#clustered">Clustered</a><a href="#nonclustered">Non-Clustered</a><a href="#compare">Comparison</a></div>
-</section>
-
-<section class="topic-section" id="bplus">
-<h2>1. B+ Tree — the index structure</h2>
-<ul>
-<li>A B+ Tree is a balanced, multi-way search tree commonly used for database indexes.</li>
-<li>All leaf nodes are at the same level, so lookup depth stays predictable.</li>
-<li>Internal nodes mainly store separator keys used for routing.</li>
-<li>Leaf nodes contain the indexed keys and references to the actual data.</li>
-<li>Leaf nodes are linked, making sequential and range scans efficient.</li>
-</ul>
-<div class="figure">
-<div class="figure-title">Example B+ Tree</div>
-<div class="tree">
-<div class="tree-row"><div class="node root">40 | 80</div></div>
-<div class="tree-arrow">↓</div>
-<div class="tree-row"><div class="node">10 | 20 | 30</div><div class="node">40 | 50 | 60</div><div class="node">80 | 90 | 100</div></div>
-<div class="tree-arrow">↓</div>
-<div class="tree-row leaf-row"><div class="node">10, 15, 18</div><div class="node">20, 25, 30</div><div class="node">40, 45, 50</div><div class="node">60, 65, 70</div><div class="node">80, 85, 90</div><div class="node">100, 110, 120</div></div>
-<div class="linked"><span>→</span><span>→</span><span>→</span><span>→</span><span>→</span></div>
-<p class="note">Linked leaves support efficient range traversal after the first matching key is found.</p>
-</div>
-</div>
-<div class="flow-line"><span>Search key</span><b>→</b><span>Traverse B+ Tree</span><b>→</b><span>Leaf entry</span><b>→</b><span>Data Page</span><b>→</b><span>Rows</span></div>
-</section>
-
-<section class="topic-section" id="page">
-<h2>2. Data Page — where table rows live</h2>
-<p>A <b>data page</b> is a fixed-size storage unit used by a database to hold table records. The exact size and layout are database-engine-specific.</p>
-<div class="figure">
-<div class="figure-title">Typical structure of a data page</div>
-<div class="page-diagram">
-<div class="page-part"><h4>Page Header</h4><div class="slot">Page ID</div><div class="slot">Page type</div><div class="slot">Number of records</div><div class="slot">Free-space pointer</div></div>
-<div class="page-part"><h4>Slot Directory</h4><div class="slot">Slot 1 →</div><div class="slot">Slot 2 →</div><div class="slot">…</div><div class="slot">Slot N →</div></div>
-<div class="page-part"><h4>Row / Record Data Area</h4><div class="row">Row 1 data</div><div class="row">Row 2 data</div><div class="row">…</div><div class="row">Row N data</div></div>
-</div>
-<p class="note">The slot directory lets the engine locate records within the page even when records move because of updates or variable-length rows.</p>
-</div>
-<div class="callout"><strong>Important distinction:</strong> A B+ Tree leaf entry normally gets you to a page/record reference; the data page contains the actual table row. Do not confuse the index page with the table's data page.</div>
-</section>
-
-<section class="topic-section" id="disk">
-<h2>3. Data Page → Data Block mapping on disk</h2>
-<p>The database presents storage through logical pages, while the underlying storage device reads physical blocks/sectors through the filesystem and storage stack. In many database systems, a database page is designed to align with a storage block, but the exact mapping is implementation-dependent.</p>
-<div class="figure">
-<div class="figure-title">Logical page to disk storage</div>
-<div class="disk-map">
-<div class="index-box"><b>B+ Tree leaf</b><div class="slot">Key 40 → Page ID 101</div><div class="slot">Key 50 → Page ID 102</div><div class="slot">Key 60 → Page ID 103</div></div>
-<div class="arrow-line">→</div>
-<div class="disk"><b>Disk / Storage</b><div class="block">Block 101 · Page 101</div><div class="block">Block 102 · Page 102</div><div class="block">Block 103 · Page 103</div></div>
-</div>
-<p class="note">Conceptually: B+ Tree → page identifier → database reads the corresponding page into the buffer pool → rows are read from that page.</p>
-</div>
-<div class="flow-line"><span>Index lookup</span><b>→</b><span>Page ID</span><b>→</b><span>Buffer Pool / Memory</span><b>→</b><span>Disk I/O if page is not cached</span><b>→</b><span>Read row</span></div>
-<div class="callout"><strong>Interview point:</strong> Indexing mainly reduces the number of pages the database must examine. Fewer page reads generally means less I/O and faster queries.</div>
-</section>
-
-<section class="topic-section" id="clustered">
-<h2>4. Clustered Indexing</h2>
-<ul>
-<li>The table's data is physically organized in the order of the clustered index key (more precisely, the leaf/data pages follow that key order).</li>
-<li>Because the data itself is organized around that key, range scans can be very efficient.</li>
-<li>A table can generally have only one clustered index because the physical row/page ordering can have only one primary organization at a time.</li>
-<li>In a clustered B+ Tree, the leaf level represents the table data itself or references data pages organized in that order, depending on the database implementation.</li>
-</ul>
-<div class="figure"><div class="figure-title">Clustered example — key order follows the data pages</div><div class="flow-line"><span>B+ Tree leaf: 10 | 20 | 30</span><b>→</b><span>Page 1: 10, 15, 18</span><b>→</b><span>Page 2: 20, 25, 30</span><b>→</b><span>Page 3: 40, 45, 50</span></div><p class="note">The important idea is physical locality/order by the indexed key, not that every database implements the leaf level identically.</p></div>
-</section>
-
-<section class="topic-section" id="nonclustered">
-<h2>5. Non-Clustered Indexing</h2>
-<ul>
-<li>The index is stored separately from the actual table data.</li>
-<li>A table can have multiple non-clustered indexes.</li>
-<li>Leaf entries contain the indexed key plus a row locator — for example a Row ID, primary key, or another database-specific pointer.</li>
-<li>The database may need an additional lookup from the index entry to the data page/row. This is often called a key lookup or bookmark lookup.</li>
-</ul>
-<div class="figure"><div class="figure-title">Non-clustered example — extra lookup</div><div class="flow-line"><span>B+ Tree leaf: key 40 → Row ID 104</span><b>→</b><span>Data Page 12</span><b>→</b><span>Row 104</span></div><p class="note">The index gets you to the row locator; the separate data structure contains the actual row.</p></div>
-</section>
-
-<section class="topic-section" id="compare">
-<h2>6. Clustered vs Non-Clustered</h2>
-<div class="compare"><table><caption>Interview comparison</caption><thead><tr><th>Feature</th><th>Clustered</th><th>Non-Clustered</th></tr></thead><tbody>
-<tr><td>Data organization</td><td>Data pages follow index-key order</td><td>Index is separate from table data</td></tr>
-<tr><td>Typical number</td><td>One clustered organization per table</td><td>Multiple indexes allowed</td></tr>
-<tr><td>Leaf level</td><td>Represents/organizes the table data</td><td>Contains key + row locator</td></tr>
-<tr><td>Point lookup</td><td>Fast</td><td>Fast, but may require extra lookup</td></tr>
-<tr><td>Range query</td><td>Usually excellent because nearby keys are physically close</td><td>Can require more data-page reads</td></tr>
-<tr><td>Best use</td><td>Primary access path, range queries, ORDER BY on the key</td><td>Additional search/filter columns and multiple access paths</td></tr>
-</tbody></table></div>
-</section>
-
-<section class="topic-section">
-<div class="callout interview"><strong>7. Interview mental model</strong><br><br>
-<b>Index = GPS</b> → tells the database where to look.<br>
-<b>B+ Tree = navigation structure</b> → quickly narrows the key range.<br>
-<b>Data Page = container of rows</b> → actual records live here.<br>
-<b>Page → disk block</b> → storage mapping determines where the page is read from when it is not already in memory.<br>
-<b>Clustered index</b> → the table data is organized around that key.<br>
-<b>Non-clustered index</b> → separate index + row locator + possible extra lookup.
-</div>
-</section>
+<section class="topic-head"><p class="kicker">DATABASES · INTERVIEW REVISION</p><h1>Database Indexing</h1><p>B+ Tree, data pages, disk-block mapping, clustered indexing and non-clustered indexing — with the storage-level picture that interviewers often expect.</p></section>
+<section class="topic-section" id="bplus"><h2>1. B+ Tree — the index structure</h2><ul><li>A B+ Tree is a balanced, multi-way search tree commonly used for database indexes.</li><li>All leaf nodes are at the same level, so lookup depth stays predictable.</li><li>Internal nodes mainly store separator keys used for routing.</li><li>Leaf nodes contain the indexed keys and references to the actual data.</li><li>Leaf nodes are linked, making sequential and range scans efficient.</li></ul><div class="figure"><div class="figure-title">Example B+ Tree</div><div class="tree"><div class="tree-row"><div class="node root">40 | 80</div></div><div class="tree-arrow">↓</div><div class="tree-row"><div class="node">10 | 20 | 30</div><div class="node">40 | 50 | 60</div><div class="node">80 | 90 | 100</div></div><div class="tree-arrow">↓</div><div class="tree-row leaf-row"><div class="node">10, 15, 18</div><div class="node">20, 25, 30</div><div class="node">40, 45, 50</div><div class="node">60, 65, 70</div><div class="node">80, 85, 90</div><div class="node">100, 110, 120</div></div><div class="linked"><span>→</span><span>→</span><span>→</span><span>→</span><span>→</span></div><p class="note">Linked leaves support efficient range traversal after the first matching key is found.</p></div></div><div class="flow-line"><span>Search key</span><b>→</b><span>Traverse B+ Tree</span><b>→</b><span>Leaf entry</span><b>→</b><span>Data Page</span><b>→</b><span>Rows</span></div></section>
+<section class="topic-section" id="page"><h2>2. Data Page — where table rows live</h2><p>A <b>data page</b> is a fixed-size storage unit used by a database to hold table records. The exact size and layout are database-engine-specific.</p><div class="figure"><div class="figure-title">Typical structure of a data page</div><div class="page-diagram"><div class="page-part"><h4>Page Header</h4><div class="slot">Page ID</div><div class="slot">Page type</div><div class="slot">Number of records</div><div class="slot">Free-space pointer</div></div><div class="page-part"><h4>Slot Directory</h4><div class="slot">Slot 1 →</div><div class="slot">Slot 2 →</div><div class="slot">…</div><div class="slot">Slot N →</div></div><div class="page-part"><h4>Row / Record Data Area</h4><div class="row">Row 1 data</div><div class="row">Row 2 data</div><div class="row">…</div><div class="row">Row N data</div></div></div><p class="note">The slot directory lets the engine locate records within the page even when records move because of updates or variable-length rows.</p></div><div class="callout"><strong>Important distinction:</strong> A B+ Tree leaf entry normally gets you to a page/record reference; the data page contains the actual table row. Do not confuse the index page with the table's data page.</div></section>
+<section class="topic-section" id="disk"><h2>3. Data Page → Data Block mapping on disk</h2><p>The database presents storage through logical pages, while the underlying storage device reads physical blocks/sectors through the filesystem and storage stack. In many database systems, a database page is designed to align with a storage block, but the exact mapping is implementation-dependent.</p><div class="figure"><div class="figure-title">Logical page to disk storage</div><div class="disk-map"><div class="index-box"><b>B+ Tree leaf</b><div class="slot">Key 40 → Page ID 101</div><div class="slot">Key 50 → Page ID 102</div><div class="slot">Key 60 → Page ID 103</div></div><div class="arrow-line">→</div><div class="disk"><b>Disk / Storage</b><div class="block">Block 101 · Page 101</div><div class="block">Block 102 · Page 102</div><div class="block">Block 103 · Page 103</div></div></div><p class="note">Conceptually: B+ Tree → page identifier → database reads the corresponding page into the buffer pool → rows are read from that page.</p></div><div class="flow-line"><span>Index lookup</span><b>→</b><span>Page ID</span><b>→</b><span>Buffer Pool / Memory</span><b>→</b><span>Disk I/O if page is not cached</span><b>→</b><span>Read row</span></div><div class="callout"><strong>Interview point:</strong> Indexing mainly reduces the number of pages the database must examine. Fewer page reads generally means less I/O and faster queries.</div></section>
+<section class="topic-section" id="clustered"><h2>4. Clustered Indexing</h2><ul><li>The table's data is physically organized in the order of the clustered index key (more precisely, the leaf/data pages follow that key order).</li><li>Because the data itself is organized around that key, range scans can be very efficient.</li><li>A table can generally have only one clustered index because the physical row/page ordering can have only one primary organization at a time.</li><li>In a clustered B+ Tree, the leaf level represents the table data itself or references data pages organized in that order, depending on the database implementation.</li></ul><div class="figure"><div class="figure-title">Clustered example — key order follows the data pages</div><div class="flow-line"><span>B+ Tree leaf: 10 | 20 | 30</span><b>→</b><span>Page 1: 10, 15, 18</span><b>→</b><span>Page 2: 20, 25, 30</span><b>→</b><span>Page 3: 40, 45, 50</span></div><p class="note">The important idea is physical locality/order by the indexed key, not that every database implements the leaf level identically.</p></div></section>
+<section class="topic-section" id="nonclustered"><h2>5. Non-Clustered Indexing</h2><ul><li>The index is stored separately from the actual table data.</li><li>A table can have multiple non-clustered indexes.</li><li>Leaf entries contain the indexed key plus a row locator — for example a Row ID, primary key, or another database-specific pointer.</li><li>The database may need an additional lookup from the index entry to the data page/row. This is often called a key lookup or bookmark lookup.</li></ul><div class="figure"><div class="figure-title">Non-clustered example — extra lookup</div><div class="flow-line"><span>B+ Tree leaf: key 40 → Row ID 104</span><b>→</b><span>Data Page 12</span><b>→</b><span>Row 104</span></div><p class="note">The index gets you to the row locator; the separate data structure contains the actual row.</p></div></section>
+<section class="topic-section" id="compare"><h2>6. Clustered vs Non-Clustered</h2><div class="compare"><table><caption>Interview comparison</caption><thead><tr><th>Feature</th><th>Clustered</th><th>Non-Clustered</th></tr></thead><tbody><tr><td>Data organization</td><td>Data pages follow index-key order</td><td>Index is separate from table data</td></tr><tr><td>Typical number</td><td>One clustered organization per table</td><td>Multiple indexes allowed</td></tr><tr><td>Leaf level</td><td>Represents/organizes the table data</td><td>Contains key + row locator</td></tr><tr><td>Point lookup</td><td>Fast</td><td>Fast, but may require extra lookup</td></tr><tr><td>Range query</td><td>Usually excellent because nearby keys are physically close</td><td>Can require more data-page reads</td></tr><tr><td>Best use</td><td>Primary access path, range queries, ORDER BY on the key</td><td>Additional search/filter columns and multiple access paths</td></tr></tbody></table></div></section>
+<section class="topic-section"><div class="callout interview"><strong>7. Interview mental model</strong><br><br><b>Index = GPS</b> → tells the database where to look.<br><b>B+ Tree = navigation structure</b> → quickly narrows the key range.<br><b>Data Page = container of rows</b> → actual records live here.<br><b>Page → disk block</b> → storage mapping determines where the page is read from when it is not already in memory.<br><b>Clustered index</b> → the table data is organized around that key.<br><b>Non-clustered index</b> → separate index + row locator + possible extra lookup.</div></section>
 <p class="back"><a href="index.html">← Back to SDE2 Interview Notes</a></p>
-</main>
-<footer><div class="container">SDE2 Interview Notes · Keep the explanations simple, then add the edge cases.</div></footer>
+</main><footer><div class="container">SDE2 Interview Notes · Keep the explanations simple, then add the edge cases.</div></footer>
+<script src="app.js"></script>
 </body>
 </html>
