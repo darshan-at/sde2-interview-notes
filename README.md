@@ -5,110 +5,72 @@ A lightweight, framework-free static website for SDE2 interview preparation. The
 ## Current notes
 
 - **Cache Strategies** — Cache-Aside, Write-Through, Write-Back, Read-Through, Refresh-Ahead and comparisons.
-- **Database Indexing** — B+ Trees, data pages, data-page structure, page-to-disk-block mapping, clustered indexing, non-clustered indexing, and interview comparison points.
-- **Distributed Concurrency Control** — concurrency need, transactions/ACID, DB locking, isolation levels and anomalies, synchronization, optimistic vs pessimistic concurrency control, optimistic versioning, MVCC, deadlocks and distributed transactions.
+- **SQL vs NoSQL** — data models, schema, transactions, scaling, sharding and replication.
+- **Database Indexing** — B+ Trees, data pages, data-page structure, page-to-disk-block mapping, clustered indexing and non-clustered indexing.
+- **Distributed Concurrency Control** — transactions/ACID, locking, isolation levels, optimistic vs pessimistic control, versioning, MVCC, deadlocks and distributed transactions.
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
-- **Proxy / Reverse Proxy / Load Balancer / Firewall / VPN** — networking building blocks and system-design distinctions.
+- **Networking Building Blocks** — proxy, reverse proxy, load balancer, firewall and VPN concepts.
+
+## Site structure
+
+The site follows one simple rule:
+
+> **One topic = one HTML page.**
+
+`index.html` is only the landing page / topic index. It does not contain the full notes for individual topics.
+
+```text
+index.html
+   │
+   ├── cache-strategies.html
+   ├── sql-vs-nosql.html
+   ├── database-indexing.html
+   ├── distributed-concurrency-control.html
+   ├── clustering.html
+   └── networking.html
+
+app.js      → single topic registry + shared navigation
+styles.css  → shared site styling
+```
 
 ## Adding a new topic
 
-The site now uses a **single topic registry in `app.js`**. This prevents the homepage navigation and topic list from getting out of sync when new notes are added.
+New topics should be added through **one predictable workflow**:
 
-### Standard workflow
-
-1. Create a new topic page, for example `distributed-transactions.html`.
+1. Create a new HTML page, for example `distributed-transactions.html`.
 2. Add one object to `SDE_TOPICS` in `app.js`:
 
 ```js
 {
   id: 'distributed-transactions',
   title: 'Distributed Transactions',
+  shortTitle: 'Transactions',
   category: 'Databases',
   description: '2PC, atomic commit, failures and practical interview trade-offs.',
   href: 'distributed-transactions.html'
 }
 ```
 
-3. Commit the page and `app.js` together.
-4. The homepage automatically gets a new topic card and navigation entry.
+3. Reuse `styles.css` and the same basic page structure.
+4. Include `<script src="app.js"></script>` on the new page.
+5. Commit the new page and registry change together.
 
-For a topic that lives directly on `index.html`, use an anchor URL such as `index.html#transactions` instead of creating a separate page.
+That's it. The homepage topic cards and every page's navigation are generated from the same registry, so there is no second navigation list to keep in sync.
 
 ### Important rules
 
-- Use **relative URLs** only so GitHub Pages works correctly under `/sde2-interview-notes/`.
-- Reuse `styles.css` for the common visual language.
-- Prefer dedicated topic pages for larger topics.
-- Keep diagrams as HTML/CSS where practical; do not make the site depend on uploaded image binaries.
-- Keep the main branch as the single publishing branch; no branch is required for each topic.
+- Use **relative URLs** so GitHub Pages works correctly under `/sde2-interview-notes/`.
+- Do not add topics directly to `index.html`.
+- Do not manually edit navigation on individual pages.
+- Keep the main branch as the single publishing branch; no topic-specific branches are required.
+- Reuse the shared CSS and keep the design simple and consistent.
+- Prefer HTML/CSS diagrams, figures and tables instead of making the site depend on uploaded image binaries.
 
-## Site architecture
+## Topic pages
 
-```text
-index.html
-   │
-   ├── Existing topic sections
-   │
-   └── app.js
-         │
-         └── SDE_TOPICS registry
-                ├── homepage topic cards
-                └── shared navigation
+### Database Indexing
 
-styles.css  → shared site styling
-
-Dedicated topic pages
-   ├── database-indexing.html
-   └── distributed-concurrency-control.html
-```
-
-This means a new topic has **one source of truth for its title, category, description and URL**. The homepage does not need a separate hand-edited navigation entry.
-
-## Distributed Concurrency Control
-
-The concurrency notes are available as a dedicated static page:
-
-```text
-distributed-concurrency-control.html
-```
-
-The page covers the interview flow:
-
-```text
-Why concurrency?
-      ↓
-Transactions / ACID
-      ↓
-DB Locking
-      ↓
-Isolation Levels + anomalies
-      ↓
-Concurrency control
-  ┌───────────────┐
-  │ Synchronize   │
-  │ Optimistic    │
-  │ Pessimistic   │
-  └───────────────┘
-      ↓
-Distributed examples + MVCC + deadlocks
-```
-
-Important distributed-control ideas include:
-
-- **Pessimistic:** assume conflicts are likely; acquire locks and block conflicting operations.
-- **Optimistic:** assume conflicts are rare; use versions/timestamps/validation and retry when a conflict is detected.
-- **Isolation levels:** Read Uncommitted, Read Committed, Repeatable Read and Serializable, with dirty-read, non-repeatable-read and phantom-read behavior.
-- **Distributed optimistic locking:** version checks such as `UPDATE ... WHERE id=? AND version=?` prevent stale writers from silently overwriting newer data.
-
-## Database Indexing
-
-The indexing notes are available as a dedicated static page:
-
-```text
-database-indexing.html
-```
-
-The page explains the storage path conceptually:
+`database-indexing.html` explains:
 
 ```text
 B+ Tree
@@ -124,7 +86,7 @@ Disk block when the page is not cached
 Actual rows
 ```
 
-It also includes a typical data-page layout:
+It also includes the typical data-page layout:
 
 ```text
 +-------------------+-------------------+----------------------+
@@ -136,13 +98,27 @@ It also includes a typical data-page layout:
 +-------------------+-------------------+----------------------+
 ```
 
-### Storage terminology note
+### Distributed Concurrency Control
 
-A database page is a logical storage unit exposed by the database engine. The exact relationship between a database page and an underlying disk/storage block depends on the database and storage stack. Many systems use page sizes designed to align well with block I/O, but the mapping should not be assumed to be universally one-to-one.
+`distributed-concurrency-control.html` covers:
+
+```text
+Concurrency problem
+      ↓
+Transactions / ACID
+      ↓
+DB locking
+      ↓
+Isolation levels + anomalies
+      ↓
+Pessimistic vs Optimistic
+      ↓
+Version checks / MVCC / deadlocks
+```
 
 ## Images
 
-The project intentionally uses **HTML diagrams, figures and tables** for the static site rather than depending on uploaded handwritten image binaries. This avoids broken-image problems on GitHub Pages while keeping the important visual explanations.
+The project intentionally uses **HTML diagrams, figures and tables** for the static site rather than depending on uploaded handwritten image binaries. This avoids broken-image problems on GitHub Pages while keeping the important visual explanations. Any visual concept added to the notes should also have a text/HTML representation in the repository.
 
 ## Run locally
 
