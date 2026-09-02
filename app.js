@@ -60,13 +60,21 @@ modalImage.addEventListener('error', () => {
   modalImage.style.display = 'none';
 });
 
-// Keep the homepage navigation connected to the dedicated database-indexing page.
+// Keep the homepage navigation connected to dedicated topic pages.
 const nav = document.querySelector('.nav nav');
-if (nav && !nav.querySelector('a[href="database-indexing.html"]')) {
-  const link = document.createElement('a');
-  link.href = 'database-indexing.html';
-  link.textContent = 'Indexing';
-  nav.appendChild(link);
+if (nav) {
+  if (!nav.querySelector('a[href="database-indexing.html"]')) {
+    const link = document.createElement('a');
+    link.href = 'database-indexing.html';
+    link.textContent = 'Indexing';
+    nav.appendChild(link);
+  }
+  if (!nav.querySelector('a[href="distributed-concurrency-control.html"]')) {
+    const link = document.createElement('a');
+    link.href = 'distributed-concurrency-control.html';
+    link.textContent = 'Concurrency';
+    nav.appendChild(link);
+  }
 }
 
 applyFilters();
