@@ -8,7 +8,8 @@ const SDE_TOPICS = [
   { id: 'indexing', title: 'Database Indexing', shortTitle: 'Indexing', category: 'Databases', description: 'B+ Trees, data pages, disk mapping, clustered and non-clustered indexes.', href: 'database-indexing.html' },
   { id: 'clustering', title: 'Active-Passive vs Active-Active', shortTitle: 'Clustering', category: 'Distributed Systems', description: 'Failover, load distribution, state consistency and split-brain concerns.', href: 'clustering.html' },
   { id: 'networking', title: 'Networking Building Blocks', shortTitle: 'Networking', category: 'Networking', description: 'Proxy, reverse proxy, load balancer, firewall and VPN concepts.', href: 'networking.html' },
-  { id: 'concurrency', title: 'Distributed Concurrency Control', shortTitle: 'Concurrency', category: 'Databases', description: 'Transactions, locking, isolation levels, optimistic and pessimistic control.', href: 'distributed-concurrency-control.html' }
+  { id: 'concurrency', title: 'Distributed Concurrency Control', shortTitle: 'Concurrency', category: 'Databases', description: 'Transactions, locking, isolation levels, optimistic and pessimistic control.', href: 'distributed-concurrency-control.html' },
+  { id: 'oauth', title: 'OAuth 2.0', shortTitle: 'OAuth 2.0', category: 'Security', description: 'OAuth roles, grant types, PKCE, API request flow and Sign in with Google.', href: 'oauth-2-0.html' }
 ];
 
 function renderTopicNavigation() {
