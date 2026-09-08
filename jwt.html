@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JWT | SDE2 Interview Notes</title><link rel="stylesheet" href="styles.css"></head>
+<body><header class="topbar"><div class="container nav"><a class="brand" href="index.html">SDE2 Interview Notes</a><nav></nav></div></header>
+<main class="container">
+<section class="intro"><p class="kicker">SECURITY · TOKENS</p><h1>JSON Web Token (JWT)</h1><p>A compact, signed token format commonly used to carry claims between parties and to authenticate API requests.</p></section>
+
+<section class="section"><div class="section-head"><span class="num">01</span><div><h2>What is JWT?</h2><p>A token format — not a complete authentication system.</p></div></div><div class="card"><p><b>JWT (JSON Web Token)</b> is a compact, URL-safe representation of claims that can be <b>digitally signed</b> and, in some variants, encrypted.</p><div class="callout"><strong>Key idea:</strong> the server can verify that a signed JWT was issued by a trusted party and that its contents were not modified. <b>Signing does not hide the payload</b>; normal JWT payloads are Base64URL-encoded, not encrypted.</div></div></section>
+
+<section class="section"><div class="section-head"><span class="num">02</span><div><h2>JWT Structure</h2><p>Three Base64URL-encoded parts separated by dots.</p></div></div><div class="card"><pre><code>HEADER.PAYLOAD.SIGNATURE
+
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9
+.
+eyJzdWIiOiIxMjMiLCJleHAiOjE3... 
+.
+&lt;digital-signature&gt;</code></pre><div class="grid three"><article class="card"><h3>1. Header</h3><p>Metadata about the token.</p><pre><code>{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "key-123"
+}</code></pre><p><code>alg</code> = signing algorithm. <code>kid</code> can identify the verification key.</p></article><article class="card"><h3>2. Payload</h3><p>Claims about the subject and token.</p><pre><code>{
+  "sub": "123",
+  "iss": "auth.example",
+  "aud": "orders-api",
+  "exp": 1790000000
+}</code></pre><p>Common claims: <code>iss</code>, <code>sub</code>, <code>aud</code>, <code>exp</code>, <code>iat</code>.</p></article><article class="card"><h3>3. Signature</h3><p>Lets the verifier detect tampering and verify the issuer, assuming the signing key is trusted.</p><pre><code>Sign(
+  base64url(header)
+  + "." +
+  base64url(payload),
+  signing_key
+)</code></pre></article></div></div></section>
+
+<section class="section"><div class="section-head"><span class="num">03</span><div><h2>JWT Request Flow</h2><p>Typical stateless API authentication.</p></div></div><div class="card"><div class="flow"><div>User</div><span>→</span><div>Login</div><span>→</span><div class="accent">Auth Server</div><span>→</span><div>Signed JWT</div><span>→</span><div>Client</div></div><p><b>1.</b> User authenticates with the authorization/authentication service.</p><p><b>2.</b> Server issues a signed access token (JWT).</p><p><b>3.</b> Client sends it with each API request:</p><pre><code>GET /api/orders
+Authorization: Bearer &lt;JWT&gt;</code></pre><p><b>4.</b> API validates signature and relevant claims such as <code>iss</code>, <code>aud</code>, and <code>exp</code>.</p><p><b>5.</b> If valid, the API authorizes the requested operation and returns the response.</p></div></section>
+
+<section class="section"><div class="section-head"><span class="num">04</span><div><h2>JWT vs Session ID</h2><p>Both can authenticate a user, but state is handled differently.</p></div></div><table><caption>Stateless token vs server-side session</caption><thead><tr><th>Aspect</th><th>JWT</th><th>Session ID</th></tr></thead><tbody>
+<tr><td>What client stores</td><td>Token containing claims</td><td>Opaque session ID</td></tr>
+<tr><td>Server-side state</td><td>Can be stateless for access-token validation</td><td>Usually stores session data in memory/DB/cache</td></tr>
+<tr><td>Validation</td><td>Verify signature + claims</td><td>Look up session ID and session state</td></tr>
+<tr><td>Revocation</td><td>Harder before token expiry unless you add state/deny lists or use short TTLs</td><td>Easy: delete/invalidate the session</td></tr>
+<tr><td>Horizontal scaling</td><td>Convenient because validation can be local; keys must be available</td><td>Needs shared session store or sticky sessions</td></tr>
+<tr><td>Payload</td><td>Claims travel with the request</td><td>Data stays server-side</td></tr>
+<tr><td>Token size</td><td>Usually larger</td><td>Usually small</td></tr>
+</tbody></table><div class="callout"><strong>Interview takeaway:</strong> JWT is not automatically “better” than sessions. If you need easy server-side revocation and browser session management, a traditional session can be simpler. JWTs are useful when distributed services need independently verifiable tokens.</div></section>
+
+<section class="section"><div class="section-head"><span class="num">05</span><div><h2>Advantages</h2><p>Why teams choose signed JWT access tokens.</p></div></div><div class="grid two"><article class="card"><h3>Stateless validation</h3><p>The resource server can validate a signed token without a database lookup for every request.</p></article><article class="card"><h3>Good for distributed systems</h3><p>Multiple API instances/services can validate the same token using a trusted public key.</p></article><article class="card"><h3>Self-contained claims</h3><p>Useful claims such as subject, issuer, audience and expiry travel with the token.</p></article><article class="card"><h3>Standard format</h3><p>JWT is widely supported across languages and platforms and fits naturally with HTTP Bearer authentication.</p></article></div></section>
+
+<section class="section"><div class="section-head"><span class="num">06</span><div><h2>Challenges / Pitfalls</h2><p>The part interviewers often care about.</p></div></div><div class="grid two"><article class="card"><h3>Revocation is harder</h3><p>A valid JWT normally remains valid until its expiry. Short-lived access tokens plus refresh-token mechanisms are common mitigations.</p></article><article class="card"><h3>Stolen token = usable credential</h3><p>Bearer tokens should be protected like passwords. Use TLS, safe storage, short lifetimes and appropriate cookie protections.</p></article><article class="card"><h3>Payload is not secret</h3><p>Never put passwords, secrets or sensitive data in an ordinary signed JWT just because it is Base64URL encoded.</p></article><article class="card"><h3>Key rotation</h3><p>Signing keys must be rotated safely. Consumers need a way to discover current verification keys.</p></article><article class="card"><h3>Large tokens</h3><p>Too many claims increase request/header size and network overhead.</p></article><article class="card"><h3>Validation mistakes</h3><p>Do not blindly trust claims. Validate the expected algorithm, issuer, audience, expiry and signature according to your security design.</p></article></div></section>
+
+<section class="section"><div class="section-head"><span class="num">07</span><div><h2>Where should JWT be used?</h2><p>Use it when its properties solve a real problem.</p></div></div><div class="card"><div class="grid two"><article><h3>Good fits</h3><ul><li>Short-lived API access tokens in distributed systems.</li><li>Microservices/resource servers that need locally verifiable credentials.</li><li>Federated/OAuth 2.0 and OpenID Connect ecosystems where JWTs are part of the token or identity format.</li><li>Systems where carrying a small, well-defined set of claims is useful.</li></ul></article><article><h3>Think twice</h3><ul><li>Simple server-rendered web apps where a session cookie is easier.</li><li>Systems requiring immediate, simple revocation of every login.</li><li>Cases where teams are tempted to put lots of application data into the token.</li></ul></article></div><div class="callout"><strong>Rule:</strong> choose JWT for its verification/distribution properties — not simply because “stateless is better.”</div></div></section>
+
+<section class="section"><div class="section-head"><span class="num">08</span><div><h2>JWK — JSON Web Key</h2><p>How systems publish the public keys used to verify JWT signatures.</p></div></div><div class="card"><p><b>JWK</b> is a JSON representation of a cryptographic key. A <b>JWKS (JSON Web Key Set)</b> is a JSON object containing a set of JWKs.</p><pre><code>{
+  "keys": [
+    {
+      "kty": "RSA",
+      "kid": "key-123",
+      "use": "sig",
+      "alg": "RS256",
+      "n": "...",
+      "e": "AQAB"
+    }
+  ]
+}</code></pre><div class="flow"><div>JWT header<br><code>kid=key-123</code></div><span>→</span><div>JWKS endpoint</div><span>→</span><div>Find matching public key</div><span>→</span><div>Verify JWT signature</div></div><div class="callout"><strong>Why JWK/JWKS matters:</strong> with asymmetric signing such as RS256, the issuer keeps the <b>private key</b> secret while resource servers can obtain the corresponding <b>public key</b>. Key rotation becomes manageable because new keys can be published alongside old keys during the transition.</div></div></section>
+
+<section class="section"><div class="section-head"><span class="num">09</span><div><h2>JWT + OAuth 2.0</h2><p>Do not confuse the token format with the authorization framework.</p></div></div><div class="card"><div class="flow"><div>OAuth 2.0<br><small>How access is granted</small></div><span>+</span><div>JWT<br><small>One possible token format</small></div><span>→</span><div>Protected API</div></div><p>OAuth 2.0 defines how a client obtains delegated access. The resulting access token <b>may</b> be a JWT, but OAuth 2.0 does not require JWT access tokens.</p><p>Similarly, OIDC uses JWT-based <b>ID tokens</b> for identity claims. An ID token should not automatically be treated as an API access token.</p></div></section>
+
+<section class="section"><div class="section-head"><span class="num">10</span><div><h2>Interview Summary</h2><p>The 30-second answer.</p></div></div><div class="card"><p><b>JWT</b> is a compact, signed token format containing claims. Its three parts are <b>Header + Payload + Signature</b>. A server verifies the signature and claims to authenticate/authorize a request.</p><p><b>Compared with Session ID:</b> JWTs can enable stateless validation across distributed services, but revocation and token lifecycle management are harder.</p><p><b>Use:</b> especially for short-lived API access tokens in distributed/federated systems — not as a default replacement for every session.</p><p><b>JWK/JWKS:</b> standard JSON representations of cryptographic keys/key sets, commonly used to publish public verification keys and support JWT key rotation.</p></div></section>
+</main><footer><div class="container">SDE2 Interview Notes · Understand the token, then understand the trust model.</div></footer><script src="app.js"></script></body></html>
