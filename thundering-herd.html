@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Thundering Herd Problem | SDE2 Interview Notes</title><link rel="stylesheet" href="styles.css"></head>
+<body><header class="topbar"><div class="container nav"><a class="brand" href="index.html">SDE2 Interview Notes</a><nav></nav></div></header>
+<main class="container">
+<section class="intro"><p class="kicker">DISTRIBUTED SYSTEMS · PERFORMANCE</p><h1>Thundering Herd Problem</h1><p>When a large number of clients, threads, or processes wake up or retry together and hit the same resource, creating a sudden load spike.</p></section>
+
+<section class="section"><div class="section-head"><span class="num">01</span><div><h2>What is the Thundering Herd?</h2><p>Many waiting actors become active at the same time.</p></div></div><div class="card"><p>The <b>Thundering Herd Problem</b> happens when many clients/threads/processes are waiting for a shared resource and then <b>all wake up, retry, or request it simultaneously</b>.</p><div class="callout"><strong>Simple analogy:</strong> a stadium gate opens and thousands of people rush through at once. The gate is available, but the sudden burst creates a queue and slows everything down.</div><p>It is common around <mark>cache expiration</mark>, locks, scheduled jobs, service recovery, connection pools, and event notifications.</p></div></section>
+
+<section class="section"><div class="section-head"><span class="num">02</span><div><h2>How does it happen?</h2><p>The pattern is usually the same.</p></div></div><div class="card"><div class="flow"><div>Many clients waiting</div><span>→</span><div class="accent">Resource becomes available</div><span>→</span><div>All wake / retry</div><span>→</span><div class="accent">Sudden load spike</div></div><ol><li>Many clients are waiting for a cache key, lock, connection, event, or scheduled time.</li><li>The resource becomes available.</li><li>Many or all waiting clients wake up or retry together.</li><li>They hit the backend/resource at nearly the same time.</li><li>The resource becomes overloaded, causing latency, failures, and even more retries.</li></ol></div></section>
+
+<section class="section"><div class="section-head"><span class="num">03</span><div><h2>Classic Example: Cache Stampede</h2><p>A very common form of thundering herd.</p></div></div><div class="card"><div class="flow"><div>Client 1</div><span>↘</span><div>Cache miss / expired</div><span>→</span><div class="accent">Database</div><span>→</span><div>Sudden spike</div></div><p>Suppose 10,000 requests need the same hot key <code>product:123</code>. The key expires at roughly the same time. Instead of one request rebuilding the value, many requests observe the miss and hit the database together.</p><pre><code>10,000 requests
+      ↓
+Cache key expired
+      ↓
+10,000 cache misses
+      ↓
+10,000 DB requests  ← dangerous
+      ↓
+DB overload / timeouts</code></pre><div class="callout danger"><strong>Important:</strong> the cache did its job normally. The problem is that <b>too many requests reacted to the same cache miss at once</b>.</div></div></section>
+
+<section class="section"><div class="section-head"><span class="num">04</span><div><h2>Why is it dangerous?</h2><p>The failure can become self-amplifying.</p></div></div><div class="grid two"><article class="card"><h3>Resource overload</h3><p>CPU, memory, database connections, thread pools, or downstream services can be exhausted.</p></article><article class="card"><h3>Latency & timeouts</h3><p>The sudden queue increases response time and causes requests to time out.</p></article><article class="card"><h3>Cascading failures</h3><p>An overloaded dependency can make upstream services fail too.</p></article><article class="card"><h3>Retry amplification</h3><p>Timeouts trigger retries, which create even more load — turning one spike into a feedback loop.</p></article></div></section>
+
+<section class="section"><div class="section-head"><span class="num">05</span><div><h2>Common Scenarios</h2><p>Look for synchronized wake-ups.</p></div></div><table><caption>Where can the herd appear?</caption><thead><tr><th>Scenario</th><th>What synchronizes?</th><th>Result</th></tr></thead><tbody>
+<tr><td>Cache expiration</td><td>Many requests see the same key expire</td><td>Many backend/database fetches</td></tr>
+<tr><td>Lock release</td><td>Many threads wait for one lock</td><td>Many wake and contend for the lock</td></tr>
+<tr><td>Scheduled jobs</td><td>Many jobs are scheduled at the same time</td><td>CPU/network/database spike</td></tr>
+<tr><td>Service recovery</td><td>Clients retry after an outage</td><td>Recovered service is hit by everyone at once</td></tr>
+<tr><td>Event notification</td><td>Many consumers wake on one event</td><td>Consumer/downstream burst</td></tr>
+</tbody></table></section>
+
+<section class="section"><div class="section-head"><span class="num">06</span><div><h2>How to Mitigate It?</h2><p>Break synchronization and avoid duplicate work.</p></div></div><div class="grid two">
+<article class="card"><h3>1. Request Coalescing / Single-Flight</h3><p>Allow only one request to fetch or rebuild the missing data. Other requests wait for the same result and reuse it.</p></article>
+<article class="card"><h3>2. Distributed Lock</h3><p>Use a lock so only one worker rebuilds/fetches the resource while others wait or serve a fallback.</p></article>
+<article class="card"><h3>3. Randomized TTL / Jitter</h3><p>Add randomness to expiration times so many keys do not expire simultaneously.</p></article>
+<article class="card"><h3>4. Exponential Backoff + Jitter</h3><p>Retry with increasing delays plus randomness. Jitter prevents clients from retrying in synchronized waves.</p></article>
+<article class="card"><h3>5. Stale-While-Revalidate</h3><p>Serve slightly stale data while one request refreshes the value in the background.</p></article>
+<article class="card"><h3>6. Rate Limiting / Load Shedding</h3><p>Put a ceiling on incoming work so a recovered or overloaded backend is not flooded.</p></article>
+</div></section>
+
+<section class="section"><div class="section-head"><span class="num">07</span><div><h2>Interview Comparison</h2><p>Thundering herd vs related problems.</p></div></div><table><thead><tr><th>Problem</th><th>Core idea</th><th>Typical mitigation</th></tr></thead><tbody>
+<tr><td>Thundering Herd</td><td>Many actors wake/retry together</td><td>Jitter, backoff, coalescing, locking, rate limits</td></tr>
+<tr><td>Cache Stampede</td><td>Many requests miss the same cache entry</td><td>Single-flight, locks, stale-while-revalidate, TTL jitter</td></tr>
+<tr><td>Retry Storm</td><td>Many failed clients retry aggressively</td><td>Exponential backoff + jitter, retry budgets, rate limits</td></tr>
+</tbody></table><div class="callout"><strong>Relationship:</strong> a cache stampede or retry storm can <b>create</b> a thundering herd. “Thundering herd” describes the synchronized surge pattern; the other terms often describe the specific trigger.</div></section>
+
+<section class="section"><div class="section-head"><span class="num">08</span><div><h2>Interview Takeaway</h2><p>The 30-second answer.</p></div></div><div class="card interview"><p>The <b>Thundering Herd Problem</b> occurs when many clients, threads, or processes become active at the same time and hit a shared resource, causing a sudden load spike.</p><p>A classic example is <b>cache expiration</b>: thousands of requests see a cache miss and all hit the database together.</p><p>Mitigate it by <b>breaking synchronization</b> and <b>avoiding duplicate work</b> — use request coalescing/single-flight, distributed locks, TTL jitter, exponential backoff with jitter, stale-while-revalidate, and rate limiting.</p></div></section>
+</main><footer><div class="container">SDE2 Interview Notes · Distributed systems are often about controlling synchronized failure.</div></footer><script src="app.js"></script></body></html>
