@@ -17,15 +17,68 @@ function renderTopicNavigation() {
   const nav = document.querySelector('.nav nav');
   if (!nav) return;
   nav.innerHTML = '';
+
   const home = document.createElement('a');
   home.href = 'index.html';
   home.textContent = 'Home';
   nav.appendChild(home);
+
+  const topicsToggle = document.createElement('button');
+  topicsToggle.className = 'topics-toggle';
+  topicsToggle.type = 'button';
+  topicsToggle.setAttribute('aria-expanded', 'false');
+  topicsToggle.setAttribute('aria-controls', 'topics-menu');
+  topicsToggle.innerHTML = 'Topics <span aria-hidden="true">▾</span>';
+  nav.appendChild(topicsToggle);
+
+  const topicsMenu = document.createElement('div');
+  topicsMenu.className = 'topics-menu';
+  topicsMenu.id = 'topics-menu';
+
+  const grouped = SDE_TOPICS.reduce((groups, topic) => {
+    (groups[topic.category] ||= []).push(topic);
+    return groups;
+  }, {});
+
+  Object.entries(grouped).forEach(([category, topics]) => {
+    const group = document.createElement('div');
+    group.className = 'topics-group';
+
+    const heading = document.createElement('div');
+    heading.className = 'topics-group-title';
+    heading.textContent = category;
+    group.appendChild(heading);
+
+    topics.forEach(topic => {
+      const link = document.createElement('a');
+      link.href = topic.href;
+      link.textContent = topic.shortTitle;
+      group.appendChild(link);
+    });
+
+    topicsMenu.appendChild(group);
+  });
+
+  nav.appendChild(topicsMenu);
+
   SDE_TOPICS.forEach(topic => {
     const link = document.createElement('a');
+    link.className = 'desktop-topic-link';
     link.href = topic.href;
     link.textContent = topic.shortTitle;
     nav.appendChild(link);
+  });
+
+  topicsToggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('topics-open');
+    topicsToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', event => {
+    if (!nav.contains(event.target)) {
+      nav.classList.remove('topics-open');
+      topicsToggle.setAttribute('aria-expanded', 'false');
+    }
   });
 }
 
