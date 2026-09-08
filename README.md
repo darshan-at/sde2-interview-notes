@@ -12,6 +12,7 @@ A lightweight, framework-free static website for SDE2 interview preparation. The
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
 - **Networking Building Blocks** — proxy, reverse proxy, load balancer, firewall and VPN concepts.
 - **JWT** — JWT structure, advantages, challenges, Session ID comparison, usage, JWK/JWKS and OAuth relationship.
+- **Thundering Herd Problem** — synchronized wake-ups/retries, cache stampede, retry storms, failure amplification and mitigation patterns.
 
 ## Site structure
 
