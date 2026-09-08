@@ -11,6 +11,7 @@ A lightweight, framework-free static website for SDE2 interview preparation. The
 - **OAuth 2.0** — roles/actors, authorization grant types, Authorization Code + PKCE, API request flow, tokens, and a Sign in with Google example.
 - **Active-Passive vs Active-Active Clustering** — failover, state consistency, split brain and trade-offs.
 - **Networking Building Blocks** — proxy, reverse proxy, load balancer, firewall and VPN concepts.
+- **JWT** — JWT structure, advantages, challenges, Session ID comparison, usage, JWK/JWKS and OAuth relationship.
 
 ## Site structure
 
