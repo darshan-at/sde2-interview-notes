@@ -10,7 +10,8 @@ const SDE_TOPICS = [
   { id: 'networking', title: 'Networking Building Blocks', shortTitle: 'Networking', category: 'Networking', description: 'Proxy, reverse proxy, load balancer, firewall and VPN concepts.', href: 'networking.html' },
   { id: 'concurrency', title: 'Distributed Concurrency Control', shortTitle: 'Concurrency', category: 'Databases', description: 'Transactions, locking, isolation levels, optimistic and pessimistic control.', href: 'distributed-concurrency-control.html' },
   { id: 'oauth', title: 'OAuth 2.0', shortTitle: 'OAuth 2.0', category: 'Security', description: 'OAuth roles, grant types, PKCE, API request flow and Sign in with Google.', href: 'oauth-2-0.html' },
-  { id: 'jwt', title: 'JWT', shortTitle: 'JWT', category: 'Security', description: 'JWT structure, advantages, challenges, sessions vs tokens, usage and JWK/JWKS.', href: 'jwt.html' }
+  { id: 'jwt', title: 'JWT', shortTitle: 'JWT', category: 'Security', description: 'JWT structure, advantages, challenges, sessions vs tokens, usage and JWK/JWKS.', href: 'jwt.html' },
+  { id: 'thundering-herd', title: 'Thundering Herd Problem', shortTitle: 'Thundering Herd', category: 'Distributed Systems', description: 'Why many clients wake or retry together, cache stampedes, overload and mitigation patterns.', href: 'thundering-herd.html' }
 ];
 
 function renderTopicNavigation() {
